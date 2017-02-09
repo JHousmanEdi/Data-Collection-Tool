@@ -9,11 +9,7 @@ class CraigsListRegionSpider(scrapy.Spider):
     allowed_domains = ["craigslist.org"]
     start_urls = ['https://www.craigslist.org/about/sites']
     #/html/body/article/section/div[3]/div[3]/ul[6]/li[1]/a
-"""
-Parse took all the URL data from craigslist and breaks it into its URL and name that was the cover of the hyperlink
-Places each of the items into the item object CraigsListRegion and then stores that into an array which
-can be exported into CSV or Json file
-"""
+
     def parse(self, response):
         list_of_regions = ["Chicago", "Honolulu", "Los Angeles", "New York", "Phoenix"]
         Single_Regions = ["Albuquerque", "Anchorage", "Billings", "Houston", "Oklahoma City", "Sioux Falls", "Pheonix"]
