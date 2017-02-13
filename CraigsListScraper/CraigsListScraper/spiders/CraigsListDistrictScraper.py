@@ -4,7 +4,7 @@ import csv
 """
 Takes CSV Data from the Region Scraper and puts it into a list that Scrapy can utilize as its start_urls
 """
-with open('/home/jhous/Documents/DataCollection/CraigsListScraper/CraigsListScraper/items.csv', 'rbU') as csv_file:
+with open('/home/jhous/Documents/DataCollection/CraigsListScraper/CraigsListScraper/region_urls.csv', 'rbU') as csv_file:
     data = csv.reader(csv_file)
     scrapurls = []
     for row in data:
@@ -34,3 +34,4 @@ class CraigsListDistrictSpider(scrapy.Spider):
             item["region"] = region_name
             data.append(item)
         return data
+

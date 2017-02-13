@@ -1,5 +1,5 @@
 import scrapy
-from .. import items
+from  .. import items
 
 """
 Craigslist Spider that gathered all regions URLS and put them with their string name
@@ -26,8 +26,10 @@ class CraigsListRegionSpider(scrapy.Spider):
         box2_urls = response.xpath('/html/body/article/section/div[3]/div[2]//a/@href').extract()
         box3_names = response.xpath('/html/body/article/section/div[3]/div[3]//a/text()').extract()
         box3_urls = response.xpath('/html/body/article/section/div[3]/div[3]//a/@href').extract()
-        names = box1_names + box2_names + box3_names
-        urls = box1_urls + box2_urls + box3_urls
+        box4_names = response.xpath('/html/body/article/section/div[3]/div[4]//a/text()').extract()
+        box4_urls = response.xpath('/html/body/article/section/div[3]/div[4]//a/@href').extract()
+        names = box1_names + box2_names + box3_names + box4_names
+        urls = box1_urls + box2_urls + box3_urls + box4_urls
         data = []
         for index, name in enumerate(names):
             item = items.CraigsListRegion()
