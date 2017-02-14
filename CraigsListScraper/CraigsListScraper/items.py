@@ -19,8 +19,37 @@ class CraigsListDistrict(Item):
     district = Field()
     url = Field()
 
+
 class CraigsListJobs(Item):
     region = Field()
     district = Field()
     job_name = Field()
     url = Field()
+
+
+class JobInfoGood(Item):
+    CL_ID = Field()
+    Month = Field()
+    Day = Field()
+    State = Field()
+    Occupation = Field()
+    ToAddress = Field()
+    WordResume = Field()
+    Company = Field()
+    CompanyDescription = Field()
+    EmailSubject = Field()
+
+
+class JobInfoBad(Item):
+    City = Field()
+    CL_ID = Field()
+    Month_Posted = Field()
+    Day_Posted = Field()
+    Reason = Field()
+    ManagerialSupervisor = Field()
+    AlreadyApplied = Field()
+    BilingualRequirement = Field()
+
+
+
+
