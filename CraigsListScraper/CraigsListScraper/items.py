@@ -38,6 +38,7 @@ class JobInfoGood(Item):
     Company = Field()
     CompanyDescription = Field()
     EmailSubject = Field()
+    City = Field()
 
 
 class JobInfoBad(Item):
