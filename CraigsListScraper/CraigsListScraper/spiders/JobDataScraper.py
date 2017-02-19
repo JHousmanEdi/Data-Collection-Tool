@@ -8,7 +8,7 @@ import dateutil.parser
 
 class JobDataScraper(scrapy.Spider):
     name = "jobDataSpider"
-    start_urls = ['https://albuquerque.craigslist.org/search/ret']
+    start_urls = ["https://albuquerque.craigslist.org/search/ret"]
     data = []
 
     def parse(self, response):
@@ -17,11 +17,11 @@ class JobDataScraper(scrapy.Spider):
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
         incrementer = 0
         for link in links:
-            if link.count('/') <= 2 and incrementer <= 10:
+            if link.count('/') <= 2:
                 absolute_url = current_url + link
                 incrementer+=1
                 yield scrapy.Request(absolute_url, callback=self.parse_classified)
-            if incrementer > 10:
+            else:
                 break
 
     def parse_classified(self, response):
@@ -61,18 +61,3 @@ class JobDataScraper(scrapy.Spider):
     #     item['toAddress'] = "".join(response.xpath("//div[@class='anonemail']//text()").extract())
     #     self.data.append(item)
     #     return self.data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
