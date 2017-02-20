@@ -1,13 +1,17 @@
 import csv
 import scrapy
 from .. import items
+import os
+
+items1_data_path = os.path.join(os.getcwd(), 'items.csv')
+items2_data_path = os.path.join(os.getcwd(), 'items2.csv')
 
 scrapurls = []
-with open('/home/jhous/Documents/DataCollection/CraigsListScraper/CraigsListScraper/items.csv', 'rbU') as csv_file:
+with open(items1_data_path, 'rbU') as csv_file:
     data = csv.reader(csv_file)
     for row in data:
         scrapurls.append(row)
-with open('/home/jhous/Documents/DataCollection/CraigsListScraper/CraigsListScraper/items2.csv', 'rbU') as csv_file:
+with open(items2_data_path, 'rbU') as csv_file:
     data = csv.reader(csv_file)
     for row in data:
         scrapurls.append(row)
@@ -34,5 +38,3 @@ class CraigsListJobpider(scrapy.Spider):
             item['job_name'] = job_names[index]
             data.append(item)
         return data
-
-
