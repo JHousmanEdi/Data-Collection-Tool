@@ -9,7 +9,6 @@ from scrapy import signals
 from scrapy.contrib.exporter import CsvItemExporter
 import settings
 
-
 class CraigslistscraperPipeline(object):
     def process_item(self, item, spider):
         return item
@@ -20,7 +19,6 @@ class CraigslistscraperPipeline(object):
 #         'WordResume','Company','CompanyDescription','EmailSubject','City',
 #         'url','RA']
 #         csvwriter.writerow(fields)
-
 class CSVPipeline(object):
 
   def __init__(self):
