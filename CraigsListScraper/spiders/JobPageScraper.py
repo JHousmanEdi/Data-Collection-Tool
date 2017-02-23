@@ -3,15 +3,15 @@ import scrapy
 from .. import items
 import os
 
-items1_data_path = os.path.join(os.getcwd(), 'items.csv')
-items2_data_path = os.path.join(os.getcwd(), 'items2.csv')
+region_urls_data_path = os.path.join(os.getcwd(), 'region_urls.csv')
+district_urls_data_path = os.path.join(os.getcwd(), 'district_urls.csv')
 
 scrapurls = []
-with open(items1_data_path, 'rbU') as csv_file:
+with open(region_urls_data_path, 'rbU') as csv_file:
     data = csv.reader(csv_file)
     for row in data:
         scrapurls.append(row)
-with open(items2_data_path, 'rbU') as csv_file:
+with open(district_urls_data_path, 'rbU') as csv_file:
     data = csv.reader(csv_file)
     for row in data:
         scrapurls.append(row)
