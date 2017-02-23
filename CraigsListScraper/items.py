@@ -31,7 +31,7 @@ class JobInfoGood(Item):
     CL_ID = Field()
     Month = Field()
     Day = Field()
-    State = Field()
+    StateCode = Field()
     Occupation = Field()
     ToAddress = Field()
     WordResume = Field()

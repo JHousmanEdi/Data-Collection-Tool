@@ -84,7 +84,7 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 8
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'pipelines.CSVPipeline': 300,
+   'CraigsListScraper.CraigsListScraper.pipelines.DataStoragePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
