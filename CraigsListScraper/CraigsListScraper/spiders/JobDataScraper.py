@@ -3,7 +3,7 @@ from .. import items
 import re
 import urlparse
 import dateutil.parser
-from .. import toAddress_Grabber
+#from .. import toAddress_Grabber
 
 
 
@@ -11,8 +11,9 @@ class JobDataScraper(scrapy.Spider):
     name = "jobDataSpider"
     start_urls = ["https://albuquerque.craigslist.org/search/fbh"]
     data = []
-    def __init__(self):
-        self.Grabber = toAddress_Grabber.to_AddressFinder
+    def __init__(self, *a, **kw):
+        super(JobDataScraper, self).__init__(*a, **kw)
+        #self.Grabber = toAddress_Grabber.to_AddressFinder
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
@@ -34,12 +35,12 @@ class JobDataScraper(scrapy.Spider):
             item = items.JobInfoGood()
             #TODO CALL LOGIC ABOUT DETERMINING IF AD IS GOOD OR NOT
             url = response.url
-            self.Grabber.gotoPage(url)
-            if(self.Grabber.check_exists_by_xpath == True):
-                self.Grabber.Click_Reply
-                item['toAddress'] = self.Grabber.Obtain_data
-            else:
-                item['toAddress'] = "Not Available Yet"
+            # self.Grabber.gotoPage(url)
+            # if(self.Grabber.check_exists_by_xpath == True):
+            #     self.Grabber.Click_Reply
+            #     item['toAddress'] = self.Grabber.Obtain_data
+            # else:
+            #     item['toAddress'] = "Not Available Yet"
 
             url_split = urlparse.urlsplit(url)
             item['City'] = re.split('\W', url_split.netloc)[0]
