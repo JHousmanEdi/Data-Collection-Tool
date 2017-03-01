@@ -80,7 +80,7 @@ celerybeat-schedule
 .env
 # Python files
 .Deprecated
-Deperecated/
+Deprecated/
 
 # virtualenv
 .venv
