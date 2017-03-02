@@ -1,18 +1,26 @@
+from __future__ import absolute_import
 import scrapy
-from .. import items
+from items import JobInfoGood
 import re
 import urlparse
 import dateutil.parser
+import RAOrganizer
 #from .. import toAddress_Grabber
 
 
 
 class JobDataScraper(scrapy.Spider):
     name = "jobDataSpider"
-    start_urls = ["https://albuquerque.craigslist.org/search/fbh"]
     data = []
-    def __init__(self, *a, **kw):
+    def __init__(self,RA,*a, **kw):
         super(JobDataScraper, self).__init__(*a, **kw)
+        self.RA = RA
+        custom_settings = {''}
+        print(RA)
+        self.urls = RAOrganizer.RAAssignment(RA)
+        self.urls.GetURLS()
+        self.start_urls = self.urls.URL_Container
+
         #self.Grabber = toAddress_Grabber.to_AddressFinder
 
     def parse(self, response):
@@ -32,7 +40,7 @@ class JobDataScraper(scrapy.Spider):
         data = []
         match = re.search(r"(\w+)\.html", response.url)
         if match:
-            item = items.JobInfoGood()
+            item = JobInfoGood()
             #TODO CALL LOGIC ABOUT DETERMINING IF AD IS GOOD OR NOT
             url = response.url
             # self.Grabber.gotoPage(url)
@@ -43,7 +51,8 @@ class JobDataScraper(scrapy.Spider):
             #     item['toAddress'] = "Not Available Yet"
 
             url_split = urlparse.urlsplit(url)
-            item['City'] = re.split('\W', url_split.netloc)[0]
+            city = re.split('\W', url_split.netloc)[0]
+            item['City'] = city
             item['CL_ID'] = re.split('\W', url_split.path)[2]
             date = response.xpath('//*[@id="display-date"]/time/@datetime').extract()
             date_split = dateutil.parser.parse(date[0])
@@ -53,14 +62,14 @@ class JobDataScraper(scrapy.Spider):
             item['url'] = response.url
             data.append(item)
 
-            item['State'] = "placeholder"
-            item['Occupation'] = "placeholder"
-            item['ToAddress'] = "placeholder"
-            item['WordResume'] = "placeholder"
-            item['Company'] = "placeholder"
-            item['CompanyDescription'] = "placeholder"
-            item['EmailSubject'] = "placeholder"
-            item['RA'] = "placeholder"
+            item['State'] = self.urls.getState(city)
+            item['Occupation'] = ""
+            item['ToAddress'] = ""
+            item['WordResume'] = ""
+            item['Company'] = ""
+            item['CompanyDescription'] = ""
+            item['EmailSubject'] = ""
+            item['RA'] = self.urls.RA
             #Acquiring reply request
             #reply_button = response.xpath('//*[@id="replylink"]/@href').extract()
             #reply_request = url_split.scheme + "://" + url_split.netloc + reply_button[0]

@@ -1,11 +1,20 @@
-Cathy Balfe,Connor Crowley,Natalie George,Emmarose Glaser,Bomku Han,Jason Housman,Jennifer kallenburg,Kendall Knuth,Keenan Lang-Backe,Julia Levy,Ethan May,Christopher Pennanen,Samuel Rich,Jinlong Shi,Raymond Spiries,Alec Stewart,Savannah Strachan,Tiantian Tang,Aubrey Wang
-20,20,9,9,20,20,9,9,20,9,23,23,23,10,10,10,9,9,9
-240,34,71,307,5,9,181,349,187,187,5,9,34,5,9,34,240,240,307
-241,71,72,308,181,349,9,,333,333,71,187,307,71,187,307,241,241,308
-242,72,73,309,,,,,430,,72,240,308,72,240,308,242,242,309
-243,73,74,310,,,,,,,73,241,309,73,241,309,243,243,310
-244,74,,,,,,,,,74,242,310,74,242,310,244,244,34
-307,,,,,,,,,,333,243,349,333,243,349,5,430,
-308,,,,,,,,,,181,244,430,181,244,430,,,
-309,,,,,,,,,,,,,,,,,,
-310,,,,,,,,,,,,,,,,,,
+RA,Job Index,Location Index0,Location Index1,Location Index2,Location Index3,Location Index4,Location Index5,Location Index6,Location Index7,Location Index8
+Cathy Balfe,20,241,242,243,244,245,299,300,301,302
+Connor Crowley,20,35,72,73,74,75,-1,-1,-1,-1
+Natalie George,9,72,73,74,75,-1,-1,-1,-1,-1
+Emmarose Glaser,9,299,300,301,302,-1,-1,-1,-1,-1
+Bomku Han,20,6,175,-1,-1,-1,-1,-1,-1,-1
+Jason Housman,20,6,341,-1,-1,-1,-1,-1,-1,-1
+Jennifer kallenburg,9,10,175,-1,-1,-1,-1,-1,-1,-1
+Kendall Knuth,9,341,-1,-1,-1,-1,-1,-1,-1,-1
+Keenan Lang-Backe,20,188,325,422,-1,-1,-1,-1,-1,-1
+Julia Levy,9,188,325,-1,-1,-1,-1,-1,-1,-1
+Ethan May,23,6,72,73,74,75,175,325,-1,-1
+Christopher Pennanen,23,10,188,241,242,243,244,245,-1,-1
+Samuel Rich,23,35,299,300,301,302,341,422,-1,-1
+Jinlong Shi,10,6,72,73,74,75,175,325,-1,-1
+Raymond Spiries,10,6,188,241,242,243,244,245,-1,-1
+Alec Stewart,10,35,299,300,301,302,341,422,-1,-1
+Savannah Strachan,9,6,241,242,243,244,245,-1,-1,-1
+Tiantian Tang,9,241,242,243,244,245,422,-1,-1,-1
+Aubrey Wang,9,35,299,300,301,302,-1,-1,-1,-1

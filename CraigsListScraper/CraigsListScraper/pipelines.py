@@ -8,7 +8,7 @@ import csv
 from scrapy import signals
 from scrapy.contrib.exporter import CsvItemExporter
 import settings
-
+import RAOrganizer
 class CraigslistscraperPipeline(object):
     def process_item(self, item, spider):
         return item
@@ -32,7 +32,7 @@ class CSVPipeline(object):
     return pipeline
 
   def spider_opened(self, spider):
-    file = open('%s_items.csv' % spider.name, 'w+b')
+    file = open('RA_Sheets/%s_items.csv' % spider.RA, 'w+b')
     self.files[spider] = file
     self.exporter = CsvItemExporter(file)
     self.exporter.fields_to_export = ['CL_ID','Month','Day','State','Occupation','ToAddress',

@@ -10,6 +10,7 @@ from scrapy.item import Item, Field
 
 
 class CraigsListRegion(Item):
+    state = Field()
     name = Field()
     url = Field()
 
