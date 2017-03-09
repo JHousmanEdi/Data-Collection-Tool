@@ -11,8 +11,9 @@ def main():
     for i in RA_Table.RA:
         i = RAOrganizer.RAAssignment(i)
         RAlist.append(i)
+
+    #for i in RAlist:
     process = CrawlerProcess(get_project_settings())
-    for i in RAlist:
-        process.crawl('jobDataSpider', RA = i.RA)
+    process.crawl('jobDataSpider', RA = "Cathy Balfe")
     process.start()
 main()

@@ -37,3 +37,11 @@ class RAAssignment(object):
         city_indice = self.URL_Table.Region[self.URL_Table.Region == city].index.tolist() #Get the indice of the city
         state = self.URL_Table.StateCode[city_indice[0]] #Get the value of the state
         return state
+    def geturlfolder(self):
+        for i in range(len(self.RA)):
+            RA_Name = self.RA
+            if RA_Name[i] == " ":
+                RA_Name[i] == "_"
+                break
+        RA_Name+"/"
+        return RA_Name

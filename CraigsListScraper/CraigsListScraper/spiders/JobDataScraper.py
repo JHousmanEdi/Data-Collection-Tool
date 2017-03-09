@@ -1,15 +1,17 @@
 from __future__ import absolute_import
 import scrapy
+from scrapy.spiders import CrawlSpider, Rule
 from items import JobInfoGood
 import re
 import urlparse
 import dateutil.parser
 import RAOrganizer
+import os
 #from .. import toAddress_Grabber
 
 
 
-class JobDataScraper(scrapy.Spider):
+class JobDataScraper(CrawlSpider):
     name = "jobDataSpider"
     data = []
     def __init__(self,RA,*a, **kw):
@@ -29,12 +31,9 @@ class JobDataScraper(scrapy.Spider):
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
         incrementer = 0
         for link in links:
-            if link.count('/') <= 2:
-                absolute_url = current_url + link
-                incrementer+=1
-                yield scrapy.Request(absolute_url, callback=self.parse_classified)
-            else:
-                break
+            absolute_url = current_url + link
+            yield scrapy.Request(absolute_url, callback=self.parse_classified)
+
 
     def parse_classified(self, response):
         data = []
@@ -62,6 +61,7 @@ class JobDataScraper(scrapy.Spider):
             item['url'] = response.url
             data.append(item)
 
+
             item['State'] = self.urls.getState(city)
             item['Occupation'] = ""
             item['ToAddress'] = ""
@@ -70,6 +70,16 @@ class JobDataScraper(scrapy.Spider):
             item['CompanyDescription'] = ""
             item['EmailSubject'] = ""
             item['RA'] = self.urls.RA
+            RA_Folder = self.urls.geturlfolder()
+            filepath = "/home/jason/Documents/Data-Collection-Tool/CraigsListScraper/CraigsListScraper/RA_Sheets/" + RA_Folder
+            name = response.xpath('//*[@id="titletextonly"]/text()').extract()
+            full_path = filepath+name[0]
+            if not os.path.exists(filepath):
+                os.makedirs(filepath)
+            completeName = os.path.join(filepath, name[0])
+            with open(completeName, 'wb') as f:
+                f.write(response.body)
+
             #Acquiring reply request
             #reply_button = response.xpath('//*[@id="replylink"]/@href').extract()
             #reply_request = url_split.scheme + "://" + url_split.netloc + reply_button[0]
