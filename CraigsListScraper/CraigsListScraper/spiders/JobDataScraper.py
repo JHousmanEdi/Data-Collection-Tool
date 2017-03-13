@@ -7,6 +7,7 @@ import urlparse
 import dateutil.parser
 import RAOrganizer
 import os
+from company_finder import classify_text
 #from .. import toAddress_Grabber
 
 
@@ -60,25 +61,30 @@ class JobDataScraper(CrawlSpider):
             item['Day'] = date_values.day
             item['url'] = response.url
             data.append(item)
-
-
             item['State'] = self.urls.getState(city)
-            item['Occupation'] = ""
             item['ToAddress'] = ""
+
+            text = response.xpath('//*[@id="postingbody"]/text()').extract()
+            stringed_text = ""
+            for i in text:
+                stringed_text += i
+
+            item['Occupation'] = ""
             item['WordResume'] = ""
-            item['Company'] = ""
+            item['Company'] = classify_text(stringed_text) #Obtains all possible company name values if present
             item['CompanyDescription'] = ""
             item['EmailSubject'] = ""
             item['RA'] = self.urls.RA
-            RA_Folder = self.urls.geturlfolder()
-            filepath = "/home/jason/Documents/Data-Collection-Tool/CraigsListScraper/CraigsListScraper/RA_Sheets/" + RA_Folder
-            name = response.xpath('//*[@id="titletextonly"]/text()').extract()
-            full_path = filepath+name[0]
-            if not os.path.exists(filepath):
+            RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
+            filepath = os.path.join(os.getcwd(),RA_Sheets) + RA_Folder #Gets filepath of individual RA HTML Sheets
+            name = response.xpath('//*[@id="titletextonly"]/text()').extract() #Extracts name of HTML Sheets
+            name[0] = name[0].replace('/','-') #Replaces any slashes in HTML name to a Dash so as not to mess with pathing
+            full_path = filepath+name[0] #Appends the name of the place and the filepath together
+            if not os.path.exists(filepath): #If the filepath doesn't exist creates one
                 os.makedirs(filepath)
-            completeName = os.path.join(filepath, name[0])
-            with open(completeName, 'wb') as f:
-                f.write(response.body)
+            completeName = os.path.join(filepath, name[0]) #Opens file with complete name
+            with open(completeName, 'wb') as f: #Opens the file
+                f.write(response.body) #Writes asll the HTML to file
 
             #Acquiring reply request
             #reply_button = response.xpath('//*[@id="replylink"]/@href').extract()

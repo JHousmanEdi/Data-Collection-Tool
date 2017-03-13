@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 8
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -54,11 +54,10 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 8
 # # # Retry on most error codes since proxies fail for different reasons
 # RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 # #
-# DOWNLOADER_MIDDLEWARES = {
-#     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
-#     'scrapy_proxies.RandomProxy': 100,
-#     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'CraigsListScraper.middlewares.ProxyMiddleware' : 100
+}
 # #
 # # # Proxy list containing entries likea
 # # # http://host1:port

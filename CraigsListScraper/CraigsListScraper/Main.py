@@ -14,6 +14,7 @@ def main():
 
     #for i in RAlist:
     process = CrawlerProcess(get_project_settings())
-    process.crawl('jobDataSpider', RA = "Cathy Balfe")
+    for i in RAlist:
+        process.crawl('jobDataSpider', RA = i.RA)
     process.start()
 main()
