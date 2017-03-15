@@ -8,7 +8,7 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-
+import os
 BOT_NAME = 'CraigsListScraper'
 
 SPIDER_MODULES = ['CraigsListScraper.spiders']
@@ -55,8 +55,9 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 8
 # RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 # #
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
-    'CraigsListScraper.middlewares.ProxyMiddleware' : 100
+    'CraigsListScraper.middlewares.RandomUserAgentMiddleware': 400,
+    'CraigsListScraper.middlewares.ProxyMiddleware': 410,
+    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
 }
 # #
 # # # Proxy list containing entries likea
@@ -107,3 +108,11 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+USER_AGENT_LIST = [
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7',
+    'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0) Gecko/16.0 Firefox/16.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10'
+]
+LOG_STDOUT = True
+LOG_FILE = '/home/jason/Documents/Data-Collection-Tool/scrapy_output.txt'

@@ -5,6 +5,7 @@ from items import JobInfoGood
 import re
 import urlparse
 import dateutil.parser
+import datetime
 import RAOrganizer
 import os
 from company_finder import classify_text
@@ -28,12 +29,20 @@ class JobDataScraper(CrawlSpider):
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
+        date = response.xpath('//*[@id="sortable-results"]/ul/li/p/time/@datetime').extract()
+        today = datetime.date.today()
+        max_date = today - datetime.delta(days=7)
+        max_date_day = max_date.day
+        max_date_month = max_date.month
         starter_split_url = urlparse.urlsplit(response.url)
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
         incrementer = 0
-        for link in links:
-            absolute_url = current_url + link
-            yield scrapy.Request(absolute_url, callback=self.parse_classified)
+        for index, link in enumerate(links):
+            if(date[index].day >= max_date_day and date[index].month >= max_date_month):
+                absolute_url = current_url + link
+                yield scrapy.Request(absolute_url, callback=self.parse_classified)
+            else:
+                pass
 
 
     def parse_classified(self, response):
@@ -76,7 +85,7 @@ class JobDataScraper(CrawlSpider):
             item['EmailSubject'] = ""
             item['RA'] = self.urls.RA
             RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
-            filepath = os.path.join(os.getcwd(),RA_Sheets) + RA_Folder #Gets filepath of individual RA HTML Sheets
+            filepath = os.path.join(os.getcwd(),'RA_Sheets/') + RA_Folder #Gets filepath of individual RA HTML Sheets
             name = response.xpath('//*[@id="titletextonly"]/text()').extract() #Extracts name of HTML Sheets
             name[0] = name[0].replace('/','-') #Replaces any slashes in HTML name to a Dash so as not to mess with pathing
             full_path = filepath+name[0] #Appends the name of the place and the filepath together
