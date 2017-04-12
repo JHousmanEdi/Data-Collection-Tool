@@ -87,6 +87,9 @@ Deprecated/
 venv/
 ENV/
 
+#NLP
+NLP/
+
 # Spyder project settings
 .spyderproject
 

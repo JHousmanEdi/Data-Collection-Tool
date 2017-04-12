@@ -5,6 +5,7 @@ from items import JobInfoGood
 import re
 import urlparse
 import dateutil.parser
+import datetime
 import RAOrganizer
 import os
 from company_finder import classify_text
@@ -28,12 +29,27 @@ class JobDataScraper(CrawlSpider):
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
+        dates = response.xpath('//*[@id="sortable-results"]/ul/li/p/time/@datetime').extract()
         starter_split_url = urlparse.urlsplit(response.url)
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
+        today = datetime.date.today()
+        max_date = today - datetime.timedelta(days=7)
+        max_date_day = max_date.day
+        max_date_month = max_date.month
         incrementer = 0
-        for link in links:
-            absolute_url = current_url + link
-            yield scrapy.Request(absolute_url, callback=self.parse_classified)
+        for index, link in enumerate(links):
+            date = dateutil.parser.parse(dates[index])
+            post_day = date.day
+            post_month = date.month
+            if post_day >= max_date_day and post_month >= max_date_month:
+                if 'craigslist' in link: #Some links link to other parts of certain areas
+                    absolute_url = 'https' + link #Append html to those urls and go on merry way
+                else: #If not
+                    absolute_url = current_url + link #Its the current url and the ID#
+                yield scrapy.Request(absolute_url, callback=self.parse_classified)
+            else:
+                pass
+
 
 
     def parse_classified(self, response):
@@ -52,8 +68,10 @@ class JobDataScraper(CrawlSpider):
 
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
+            postid = response.xpath('/html/body/section/section/section/div[2]/p[1]//text()').extract()
+            clid = postid[0].split(": ",1)[1]
             item['City'] = city
-            item['CL_ID'] = re.split('\W', url_split.path)[2]
+            item['CL_ID'] = clid
             date = response.xpath('//*[@id="display-date"]/time/@datetime').extract()
             date_split = dateutil.parser.parse(date[0])
             date_values = date_split.date()
@@ -76,7 +94,7 @@ class JobDataScraper(CrawlSpider):
             item['EmailSubject'] = ""
             item['RA'] = self.urls.RA
             RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
-            filepath = os.path.join(os.getcwd(),RA_Sheets) + RA_Folder #Gets filepath of individual RA HTML Sheets
+            filepath = os.path.join(os.getcwd(),'RA_Sheets/') + RA_Folder #Gets filepath of individual RA HTML Sheets
             name = response.xpath('//*[@id="titletextonly"]/text()').extract() #Extracts name of HTML Sheets
             name[0] = name[0].replace('/','-') #Replaces any slashes in HTML name to a Dash so as not to mess with pathing
             full_path = filepath+name[0] #Appends the name of the place and the filepath together
