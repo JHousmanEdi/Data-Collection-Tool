@@ -34,12 +34,23 @@ class JobDataScraper(CrawlSpider):
         max_date = today - datetime.delta(days=7)
         max_date_day = max_date.day
         max_date_month = max_date.month
+        dates = response.xpath('//*[@id="sortable-results"]/ul/li/p/time/@datetime').extract()
         starter_split_url = urlparse.urlsplit(response.url)
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
+        today = datetime.date.today()
+        max_date = today - datetime.timedelta(days=7)
+        max_date_day = max_date.day
+        max_date_month = max_date.month
         incrementer = 0
         for index, link in enumerate(links):
-            if(date[index].day >= max_date_day and date[index].month >= max_date_month):
-                absolute_url = current_url + link
+            date = dateutil.parser.parse(dates[index])
+            post_day = date.day
+            post_month = date.month
+            if post_day >= max_date_day and post_month >= max_date_month:
+                if 'craigslist' in link: #Some links link to other parts of certain areas
+                    absolute_url = 'https' + link #Append html to those urls and go on merry way
+                else: #If not
+                    absolute_url = current_url + link #Its the current url and the ID#
                 yield scrapy.Request(absolute_url, callback=self.parse_classified)
             else:
                 pass

@@ -81,11 +81,15 @@ celerybeat-schedule
 # Python files
 .Deprecated
 Deprecated/
+/home/jason/Documents/Data-Collection-Tool/CraigsListScraper/CraigsListScraper/RA_Sheets/
 
 # virtualenv
 .venv
 venv/
 ENV/
+
+#NLP
+NLP/
 
 # Spyder project settings
 .spyderproject
