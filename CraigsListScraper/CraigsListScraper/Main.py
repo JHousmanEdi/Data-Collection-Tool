@@ -12,9 +12,13 @@ def main():
         i = RAOrganizer.RAAssignment(i)
         RAlist.append(i)
 
-    #for i in RAlist:
-    process = CrawlerProcess(get_project_settings())
+    # for i in RAlist:
+    # process = CrawlerProcess(get_project_settings())
+    # for i in RAlist:
+    #     process.crawl('jobDataSpider', RA = i.RA)
+    # process.start()
     for i in RAlist:
-        process.crawl('jobDataSpider', RA = i.RA)
-    process.start()
-main()
+        print("RA: {}".format(i.RA))
+        i.GetURLS()
+        for j in i.URL_Container:
+            print(j)

@@ -61,8 +61,10 @@ class JobDataScraper(CrawlSpider):
 
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
+            postid = response.xpath('/html/body/section/section/section/div[2]/p[1]//text()').extract()
+            clid = postid[0].split(": ",1)[1]
             item['City'] = city
-            item['CL_ID'] = re.split('\W', url_split.path)[2]
+            item['CL_ID'] = clid
             date = response.xpath('//*[@id="display-date"]/time/@datetime').extract()
             date_split = dateutil.parser.parse(date[0])
             date_values = date_split.date()
