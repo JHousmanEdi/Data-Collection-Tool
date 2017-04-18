@@ -45,3 +45,19 @@ class RAAssignment(object):
                 break
         RA_Name+"/"
         return RA_Name
+
+    def get_all_urls(self):
+        RA_Table = pd.read_csv('/home/jason/Documents/Data-Collection-Tool/CraigsListScraper/CraigsListScraper/Data/RA_Mapping.csv')
+        RAs = RA_Table["RA"].tolist()
+        RAlist = []
+        for index, RA in enumerate(RAs):
+            RAlist.append(RAOrganizer.RAAssignment(RA))
+            RAlist[index].GetURLS()
+        all_urls = []
+        for i in RAlist:
+            for j in i.URL_Container:
+                if j not in all_urls:
+                    all_urls.append(j)
+                else:
+                    pass
+        return all_urls

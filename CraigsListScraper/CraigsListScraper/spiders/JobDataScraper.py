@@ -9,36 +9,33 @@ import datetime
 import RAOrganizer
 import os
 from company_finder import classify_text
-#from .. import toAddress_Grabber
+import toAddress_Grabber
 
 
 
 class JobDataScraper(CrawlSpider):
     name = "jobDataSpider"
     data = []
-    def __init__(self,RA,*a, **kw):
+    def __init__(self,*a, **kw):
         super(JobDataScraper, self).__init__(*a, **kw)
         self.RA = RA
         custom_settings = {''}
         print(RA)
-        self.urls = RAOrganizer.RAAssignment(RA)
-        self.urls.GetURLS()
-        self.start_urls = self.urls.URL_Container
-
-        #self.Grabber = toAddress_Grabber.to_AddressFinder
+        self.RA = RAOrganizer.RAAssignment("Scraper")
+        self.start_urls = self.RA.get_all_urls()
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
         date = response.xpath('//*[@id="sortable-results"]/ul/li/p/time/@datetime').extract()
         today = datetime.date.today()
-        max_date = today - datetime.delta(days=7)
+        max_date = today - datetime.timedelta(days=7)
         max_date_day = max_date.day
         max_date_month = max_date.month
         dates = response.xpath('//*[@id="sortable-results"]/ul/li/p/time/@datetime').extract()
         starter_split_url = urlparse.urlsplit(response.url)
         current_url = starter_split_url.scheme + "://" + starter_split_url.netloc
         today = datetime.date.today()
-        max_date = today - datetime.timedelta(days=7)
+        max_date = today - datetime.timedelta(days=2)
         max_date_day = max_date.day
         max_date_month = max_date.month
         incrementer = 0
@@ -48,7 +45,7 @@ class JobDataScraper(CrawlSpider):
             post_month = date.month
             if post_day >= max_date_day and post_month >= max_date_month:
                 if 'craigslist' in link: #Some links link to other parts of certain areas
-                    absolute_url = 'https' + link #Append html to those urls and go on merry way
+                    absolute_url = 'https:' + link #Append html to those urls and go on merry way
                 else: #If not
                     absolute_url = current_url + link #Its the current url and the ID#
                 yield scrapy.Request(absolute_url, callback=self.parse_classified)
@@ -63,12 +60,11 @@ class JobDataScraper(CrawlSpider):
             item = JobInfoGood()
             #TODO CALL LOGIC ABOUT DETERMINING IF AD IS GOOD OR NOT
             url = response.url
-            # self.Grabber.gotoPage(url)
-            # if(self.Grabber.check_exists_by_xpath == True):
-            #     self.Grabber.Click_Reply
-            #     item['toAddress'] = self.Grabber.Obtain_data
-            # else:
-            #     item['toAddress'] = "Not Available Yet"
+            self.Grabber.gotoPage(url)
+            if(self.Grabber.check_exists_by_xpath() == True):
+                item['ToAddress'] = self.Grabber.get_email()
+            else:
+                item['toAddress'] = "Not Available Yet"
 
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
@@ -84,7 +80,6 @@ class JobDataScraper(CrawlSpider):
             item['url'] = response.url
             data.append(item)
             item['State'] = self.urls.getState(city)
-            item['ToAddress'] = ""
 
             text = response.xpath('//*[@id="postingbody"]/text()').extract()
             stringed_text = ""

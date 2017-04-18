@@ -1,20 +1,23 @@
-RA,Job Index,Location Index0,Location Index1,Location Index2,Location Index3,Location Index4,Location Index5,Location Index6,Location Index7,Location Index8
-Cathy Balfe,20,241,242,243,244,245,299,300,301,302
-Connor Crowley,20,35,72,73,74,75,-1,-1,-1,-1
-Natalie George,9,72,73,74,75,-1,-1,-1,-1,-1
-Emmarose Glaser,9,299,300,301,302,-1,-1,-1,-1,-1
-Bomku Han,20,6,175,-1,-1,-1,-1,-1,-1,-1
-Jason Housman,20,6,341,-1,-1,-1,-1,-1,-1,-1
-Jennifer kallenburg,9,10,175,-1,-1,-1,-1,-1,-1,-1
-Kendall Knuth,9,341,-1,-1,-1,-1,-1,-1,-1,-1
-Keenan Lang-Backe,20,188,325,422,-1,-1,-1,-1,-1,-1
-Julia Levy,9,188,325,-1,-1,-1,-1,-1,-1,-1
-Ethan May,23,6,72,73,74,75,175,325,-1,-1
-Christopher Pennanen,23,10,188,241,242,243,244,245,-1,-1
-Samuel Rich,23,35,299,300,301,302,341,422,-1,-1
-Jinlong Shi,10,6,72,73,74,75,175,325,-1,-1
-Raymond Spiries,10,6,188,241,242,243,244,245,-1,-1
-Alec Stewart,10,35,299,300,301,302,341,422,-1,-1
-Savannah Strachan,9,6,241,242,243,244,245,-1,-1,-1
-Tiantian Tang,9,241,242,243,244,245,422,-1,-1,-1
-Aubrey Wang,9,35,299,300,301,302,-1,-1,-1,-1
+RA,Job Index,Location Index1,Location Index2,Location Index3,Location Index4,Location Index5,Location Index6,Location Index7,Job,Location1,Location2,Location3,Location4
+Kendall Knuth,23,299,300,301,302,35,341,422,Security, Billings, New York, Phoenix,Sioux Falls
+Savannah Strachan,20,10,-1,-1,-1,-1,-1,-1,Retail, Anchorage,,,
+Jennifer Kallenburg,23,72,73,74,75,325,6,175,Security, Albuquerque, Chicago, OKC,Honolulu
+Julia Levy,10,299,300,301,302,35,341,422,Janitor, Billings, New York, Phoenix,Sioux Falls
+Natalie George,10,241,242,243,244,245,10,188,Janitor, Anchorage, Houston,Los Angeles,
+Emmarose Glaser,9,325,188,-1,-1,-1,-1,-1,Food Service, Houston , OKC,,
+Ethan May,9,10,175,-1,-1,-1,-1,-1,Food Service, Honolulu , Anchorage,,
+Cathy Balfe,20,6,175,-1,-1,-1,-1,-1,Retail, Albuquerque , Honolulu,,
+Samuel Richi,9,341,-1,-1,-1,-1,-1,-1,Food Service, Phoenix,,,
+Hunter Spires,9,72,73,74,75,-1,-1,-1,Food Service, Chicago,,,
+Aubrey Wang,9,299,300,301,302,35,-1,-1,Food Service, New York , Billings,,
+Jinlong Shi,10,72,73,74,75,325,6,-1,Janitor, Albuquerque, Chicago, OKC, 
+Jinlong Shi2,20,175,-1,-1,-1,-1,-1,-1,Retail,Honolulu,,,
+Keenan Lang-Backe,20,422,325,188,-1,-1,-1,-1,Retail, Houston, OKC,Sioux Falls,
+Keenan Lang-Backe2,9,6,-1,-1,-1,-1,-1,-1,Food Service, Albuquerque,,,
+Connor Crowley,20,72,73,74,75,35,-1,-1,Retail, Billings , Chicago,,
+Connor Crowley2,9,241,242,243,244,245,-1,-1,Food Service, Los Angeles,,,
+TiantianTang,9,241,242,243,244,245,422,-1,Food Service, Los Angeles , Sioux Falls,,
+Christopher Pennanen,23,241,242,243,244,245,10,188,Security, Anchorage, Houston,Los Angeles,
+Christopher Pennanen2,20,299,300,301,302,-1,-1,-1,Retail, New York,,,
+Alec Stewart,9,299,300,301,302,-1,-1,-1,Food Service, New York,,,
+Bomku Han,20,241,242,243,244,245,-1,-1,Retail, Los Angeles,,,
