@@ -18,11 +18,9 @@ class JobDataScraper(CrawlSpider):
     data = []
     def __init__(self,*a, **kw):
         super(JobDataScraper, self).__init__(*a, **kw)
-        self.RA = RA
-        custom_settings = {''}
-        print(RA)
         self.RA = RAOrganizer.RAAssignment("Scraper")
-        self.start_urls = self.RA.get_all_urls()
+        self.start_urls = self.RA.get_all_urls_map_RA()
+        self.Grabber = toAddress_Grabber.to_AddressFinder()
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
@@ -39,16 +37,21 @@ class JobDataScraper(CrawlSpider):
         max_date_day = max_date.day
         max_date_month = max_date.month
         incrementer = 0
+        item = JobInfoGood()
         for index, link in enumerate(links):
             date = dateutil.parser.parse(dates[index])
             post_day = date.day
             post_month = date.month
             if post_day >= max_date_day and post_month >= max_date_month:
+                absolute_url = ""
                 if 'craigslist' in link: #Some links link to other parts of certain areas
-                    absolute_url = 'https:' + link #Append html to those urls and go on merry way
+                    pass
                 else: #If not
                     absolute_url = current_url + link #Its the current url and the ID#
-                yield scrapy.Request(absolute_url, callback=self.parse_classified)
+                    item['RA'] = self.RA.get_RA_by_URL(response.url)
+                    request =  scrapy.Request(absolute_url, callback=self.parse_classified)
+                    request.meta['item'] = item
+                    yield request
             else:
                 pass
 
@@ -57,14 +60,16 @@ class JobDataScraper(CrawlSpider):
         data = []
         match = re.search(r"(\w+)\.html", response.url)
         if match:
-            item = JobInfoGood()
+            item = response.meta['item']
             #TODO CALL LOGIC ABOUT DETERMINING IF AD IS GOOD OR NOT
             url = response.url
             self.Grabber.gotoPage(url)
-            if(self.Grabber.check_exists_by_xpath() == True):
+            try:
                 item['ToAddress'] = self.Grabber.get_email()
-            else:
-                item['toAddress'] = "Not Available Yet"
+                raise myException("Couldn't access ToAddress")
+            except Exception as e:
+                print("Couldn't access ToAddress")
+                item['ToAddress'] = "Not Available Yet"
 
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
@@ -79,7 +84,7 @@ class JobDataScraper(CrawlSpider):
             item['Day'] = date_values.day
             item['url'] = response.url
             data.append(item)
-            item['State'] = self.urls.getState(city)
+            item['State'] = self.RA.getState(city)
 
             text = response.xpath('//*[@id="postingbody"]/text()').extract()
             stringed_text = ""
@@ -91,17 +96,17 @@ class JobDataScraper(CrawlSpider):
             item['Company'] = classify_text(stringed_text) #Obtains all possible company name values if present
             item['CompanyDescription'] = ""
             item['EmailSubject'] = ""
-            item['RA'] = self.urls.RA
-            RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
-            filepath = os.path.join(os.getcwd(),'RA_Sheets/') + RA_Folder #Gets filepath of individual RA HTML Sheets
-            name = response.xpath('//*[@id="titletextonly"]/text()').extract() #Extracts name of HTML Sheets
-            name[0] = name[0].replace('/','-') #Replaces any slashes in HTML name to a Dash so as not to mess with pathing
-            full_path = filepath+name[0] #Appends the name of the place and the filepath together
-            if not os.path.exists(filepath): #If the filepath doesn't exist creates one
-                os.makedirs(filepath)
-            completeName = os.path.join(filepath, name[0]) #Opens file with complete name
-            with open(completeName, 'wb') as f: #Opens the file
-                f.write(response.body) #Writes asll the HTML to file
+            #item['RA'] = self.urls.RA
+            # RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
+            # filepath = os.path.join(os.getcwd(),'RA_Sheets/') + RA_Folder #Gets filepath of individual RA HTML Sheets
+            # name = response.xpath('//*[@id="titletextonly"]/text()').extract() #Extracts name of HTML Sheets
+            # name[0] = name[0].replace('/','-') #Replaces any slashes in HTML name to a Dash so as not to mess with pathing
+            # full_path = filepath+name[0] #Appends the name of the place and the filepath together
+            # if not os.path.exists(filepath): #If the filepath doesn't exist creates one
+            #     os.makedirs(filepath)
+            # completeName = os.path.join(filepath, name[0]) #Opens file with complete name
+            # with open(completeName, 'wb') as f: #Opens the file
+            #     f.write(response.body) #Writes asll the HTML to file
 
             #Acquiring reply request
             #reply_button = response.xpath('//*[@id="replylink"]/@href').extract()

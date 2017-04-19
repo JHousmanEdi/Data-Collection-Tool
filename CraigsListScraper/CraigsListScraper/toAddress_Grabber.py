@@ -24,7 +24,7 @@ class to_AddressFinder(object):
         #Click reply button
     def get_email(self):
          self.browser.find_elements(By.CSS_SELECTOR, '.reply_button')[0].click()
-         time.sleep(1)
+         time.sleep(2)
          email = self.browser.find_elements(By.CSS_SELECTOR, '.anonemail')[0].text
          return email
 
