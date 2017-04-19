@@ -10,7 +10,7 @@ class to_AddressFinder(object):
     def __init__(self):
         display = Display(visible = 0, size =(800, 600))
         display.start()
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
         #Determine if there is a reply button
     def gotoPage(self,url):
         self.browser.get(url)
