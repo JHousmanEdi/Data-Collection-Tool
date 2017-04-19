@@ -6,7 +6,6 @@ import pandas as pd
 
 
 def main():
-
     process = CrawlerProcess(get_project_settings())
     process.crawl('jobDataSpider')
     process.start()
