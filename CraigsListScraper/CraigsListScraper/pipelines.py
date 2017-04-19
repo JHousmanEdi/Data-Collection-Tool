@@ -32,7 +32,7 @@ class CSVPipeline(object):
     return pipeline
 
   def spider_opened(self, spider):
-    file = open('RA_Sheets/%s_items.csv' % spider.RA, 'w+b')
+    file = open('RA_Sheets/scraped_items.csv', 'w+b')
     self.files[spider] = file
     self.exporter = CsvItemExporter(file)
     self.exporter.fields_to_export = ['CL_ID','Month','Day','State','Occupation','ToAddress',
