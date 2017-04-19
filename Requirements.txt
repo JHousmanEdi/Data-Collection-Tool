@@ -44,3 +44,4 @@ Twisted==16.6.0
 virtualenv==15.1.0
 w3lib==1.17.0
 zope.interface==4.3.3
+Shub==2.5.1

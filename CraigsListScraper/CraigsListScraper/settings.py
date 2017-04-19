@@ -55,7 +55,7 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 8
 # RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
 # #
 DOWNLOADER_MIDDLEWARES = {
-    'CraigsListScraper.middlewares.RandomUserAgentMiddleware': 400,
+    'CraigsListScraper.middlewares.RandomUserAgentMiddleware': 543,
     'CraigsListScraper.middlewares.ProxyMiddleware': 410,
     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
 }

@@ -1,19 +1,19 @@
 from __future__ import absolute_import
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
-from items import JobInfoGood
+from CraigsListScraper.items import JobInfoGood
 import re
 import urlparse
 import dateutil.parser
 import datetime
-import RAOrganizer
+from CraigsListScraper import RAOrganizer
 import os
 from company_finder import classify_text
 import toAddress_Grabber
 
 
 
-class JobDataScraper(CrawlSpider):
+class JobDataScraper(BaseSpider):
     name = "jobDataSpider"
     data = []
     def __init__(self,*a, **kw):
