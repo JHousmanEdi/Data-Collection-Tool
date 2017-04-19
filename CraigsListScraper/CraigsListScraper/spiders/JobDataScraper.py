@@ -112,13 +112,19 @@ class JobDataScraper(BaseSpider):
             reply_url = url_split.netloc + reply_url_end[0]
             request =  scrapy.Request(reply_url, callback=self.parse_toaddress)
             request.meta['item'] = item
-
-            yield request
+            try:
+                yield request
+                raise myException ("Couldn't access Anoenmail")
+            except Exception as e
+                yield item
 
     def parse_toaddress(self, response):
         print(response.url)
         time.sleep(5)
+
         item = response.meta['item']
-        email = response.xpath('/html/body/aside/ul/li[1]/p/a//text()').extract()
-        item['ToAddress'] = email
+        try:
+            item['ToAddress'] = response.xpath('/html/body/aside/ul/li[1]/p/a//text()').extract()
+            raise myException ("Captcha'd")
+        except Exception as e
         return self.data
