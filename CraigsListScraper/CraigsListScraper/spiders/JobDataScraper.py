@@ -9,7 +9,7 @@ import datetime
 from CraigsListScraper import RAOrganizer
 import os
 from company_finder import classify_text
-import toAddress_Grabber
+import time
 
 
 
@@ -62,14 +62,14 @@ class JobDataScraper(BaseSpider):
         if match:
             item = response.meta['item']
             #TODO CALL LOGIC ABOUT DETERMINING IF AD IS GOOD OR NOT
-            url = response.url
-            self.Grabber.gotoPage(url)
-            try:
-                item['ToAddress'] = self.Grabber.get_email()
-                raise myException("Couldn't access ToAddress")
-            except Exception as e:
-                print("Couldn't access ToAddress")
-                item['ToAddress'] = "Not Available Yet"
+            # url = response.url
+            # self.Grabber.gotoPage(url)
+            # try:
+            #     item['ToAddress'] = self.Grabber.get_email()
+            #     raise myException("Couldn't access ToAddress")
+            # except Exception as e:
+            #     print("Couldn't access ToAddress")
+            #     item['ToAddress'] = "Not Available Yet"
 
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
@@ -108,14 +108,17 @@ class JobDataScraper(BaseSpider):
             # with open(completeName, 'wb') as f: #Opens the file
             #     f.write(response.body) #Writes asll the HTML to file
 
-            #Acquiring reply request
-            #reply_button = response.xpath('//*[@id="replylink"]/@href').extract()
-            #reply_request = url_split.scheme + "://" + url_split.netloc + reply_button[0]
-            yield item
+            reply_url_end = response.xpath('//*[@id="replylink"]/@href').extract()
+            reply_url = url_split.netloc + reply_url_end[0]
+            request =  scrapy.Request(reply_url, callback=self.parse_toaddress)
+            request.meta['item'] = item
 
-    # def parse_toaddress(self, response):
-    #     print("We are at the address")
-    #     item = response.meta['item']
-    #     item['toAddress'] = "".join(response.xpath("//div[@class='anonemail']//text()").extract())
-    #     self.data.append(item)
-    #     return self.data
+            yield request
+
+    def parse_toaddress(self, response):
+        print(response.url)
+        time.sleep(5)
+        item = response.meta['item']
+        email = response.xpath('/html/body/aside/ul/li[1]/p/a//text()').extract()
+        item['ToAddress'] = email
+        return self.data
