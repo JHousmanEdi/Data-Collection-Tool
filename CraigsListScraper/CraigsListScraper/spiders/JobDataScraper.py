@@ -8,19 +8,19 @@ import dateutil.parser
 import datetime
 from CraigsListScraper import RAOrganizer
 import os
-from company_finder import classify_text
+#from company_finder import classify_text
 import time
 
 
 
-class JobDataScraper(BaseSpider):
+class JobDataScraper(scrapy.Spider):
     name = "jobDataSpider"
     data = []
     def __init__(self,*a, **kw):
         super(JobDataScraper, self).__init__(*a, **kw)
         self.RA = RAOrganizer.RAAssignment("Scraper")
         self.start_urls = self.RA.get_all_urls_map_RA()
-        self.Grabber = toAddress_Grabber.to_AddressFinder()
+        #self.Grabber = toAddress_Grabber.to_AddressFinder()
 
     def parse(self, response):
         links = response.xpath('//*[@id="sortable-results"]/ul/li/p/a/@href').extract()
@@ -70,7 +70,7 @@ class JobDataScraper(BaseSpider):
             # except Exception as e:
             #     print("Couldn't access ToAddress")
             #     item['ToAddress'] = "Not Available Yet"
-
+            url = response.url
             url_split = urlparse.urlsplit(url)
             city = re.split('\W', url_split.netloc)[0]
             postid = response.xpath('/html/body/section/section/section/div[2]/p[1]//text()').extract()
@@ -93,9 +93,10 @@ class JobDataScraper(BaseSpider):
 
             item['Occupation'] = ""
             item['WordResume'] = ""
-            item['Company'] = classify_text(stringed_text) #Obtains all possible company name values if present
+            #item['Company'] = classify_text(stringed_text) #Obtains all possible company name values if present
             item['CompanyDescription'] = ""
             item['EmailSubject'] = ""
+            item['Company'] = ""
             #item['RA'] = self.urls.RA
             # RA_Folder = self.urls.geturlfolder() #Finds folder labeled with name of RA
             # filepath = os.path.join(os.getcwd(),'RA_Sheets/') + RA_Folder #Gets filepath of individual RA HTML Sheets
@@ -109,22 +110,30 @@ class JobDataScraper(BaseSpider):
             #     f.write(response.body) #Writes asll the HTML to file
 
             reply_url_end = response.xpath('//*[@id="replylink"]/@href').extract()
-            reply_url = url_split.netloc + reply_url_end[0]
-            request =  scrapy.Request(reply_url, callback=self.parse_toaddress)
-            request.meta['item'] = item
             try:
-                yield request
-                raise myException ("Couldn't access Anoenmail")
-            except Exception as e
+                reply = reply_url_end[0]
+                raise myException ("Couldn't parse the reply tag")
+                reply_url = 'https://' + url_split.netloc + reply_url_end[0]
+                request =  scrapy.Request(reply_url, callback=self.parse_toaddress)
+                request.meta['item'] = item
+                try:
+                    yield request
+                    raise myException ("Couldn't access Anoenmail")
+                except Exception as e:
+                    item['ToAddress'] = ''
+                    yield item
+            except Exception as e:
+                item ['ToAddress'] = ''
                 yield item
 
     def parse_toaddress(self, response):
         print(response.url)
         time.sleep(5)
-
         item = response.meta['item']
         try:
             item['ToAddress'] = response.xpath('/html/body/aside/ul/li[1]/p/a//text()').extract()
             raise myException ("Captcha'd")
-        except Exception as e
-        return self.data
+            yield item
+        except Exception as e:
+            item['ToAddress'] = ''
+            yield item

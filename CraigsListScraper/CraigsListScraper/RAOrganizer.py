@@ -4,6 +4,8 @@ import pandas as pd
 import re
 import collections
 import os
+import pkgutil
+import io
 
 
 
@@ -11,10 +13,11 @@ class RAAssignment(object):
     def __init__(self, RA):
         self.RA = RA
         self.URL_Container = []
-        indexed_urls_path = os.path.join(os.getcwd(),'Data','all_URLS_Indexed.csv' )
-        RA_Table_path = os.path.join(os.getcwd(), 'Data', 'RA_Mapping.csv')
-        self.URL_Table = pd.read_csv(indexed_urls_path)
-        self.RA_Table = pd.read_csv(RA_Table_path)
+
+        indexed_urls_path = pkgutil.get_data('CraigsListScraper','Data/all_URLS_Indexed.csv' )
+        RA_Table_path = pkgutil.get_data('CraigsListScraper', 'Data/RA_Mapping.csv')
+        self.URL_Table = pd.read_csv(io.BytesIO(indexed_urls_path))
+        self.RA_Table = pd.read_csv(io.BytesIO(RA_Table_path))
         self.url_RA_map = defaultdict(list)
 
     def GetRAIndices(self):
