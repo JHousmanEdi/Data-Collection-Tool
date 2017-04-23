@@ -81,7 +81,9 @@ celerybeat-schedule
 # Python files
 .Deprecated
 Deprecated/
-/home/jason/Documents/Data-Collection-Tool/CraigsListScraper/CraigsListScraper/RA_Sheets/
+RA_Sheets/
+Applications/*.csv
+
 
 # virtualenv
 .venv

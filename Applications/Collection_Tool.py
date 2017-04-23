@@ -1,11 +1,14 @@
 import sys
-from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+from PyQt4.QtCore import pyqtSlot
+from PyQt4.QtWebKit import QWebView, QWebPage
 import csv
 import codecs
 import os
 import re
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__()
@@ -19,14 +22,14 @@ class MainWindow(QtGui.QMainWindow):
         self.entry = EntryForm(self) #Entry form for data
 
 
-        _widget = QtGui.QWidget()
+        _widget = QWidget()
 
-        self.browser = QtWebKit.QWebView()
+        self.browser = QWebView()
 
 
         self.url_input = UrlInput(self.browser) #Initialize url input
 
-        self.layout = QtGui.QVBoxLayout(_widget) #Initialuze Vertical Layout
+        self.layout = QVBoxLayout(_widget) #Initialuze Vertical Layout
 
         self.layout.addWidget(self.url_input) #Add url Input widget
 
@@ -62,11 +65,11 @@ class MainWindow(QtGui.QMainWindow):
 
 
     def Menu_Options(self):
-        exitAction = QtGui.QAction('Exit', self)
+        exitAction = QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(self.close_application)
-        importAction = QtGui.QAction('&Import CSV', self)
+        importAction = QAction('&Import CSV', self)
         importAction.setStatusTip('Import Jobs CSV')
         importAction.triggered.connect(self.selectFile)
         self.statusBar()
@@ -85,7 +88,7 @@ class MainWindow(QtGui.QMainWindow):
         sys.exit()
 
     def selectFile(self):
-        name = QtGui.QFileDialog.getOpenFileName(self, 'Import CSV')
+        name = QFileDialog.getOpenFileName(self, 'Import CSV')
         csv_filled = self.load_csv(name)
 
         self.CSVFile = csv_filled
@@ -96,7 +99,7 @@ class MainWindow(QtGui.QMainWindow):
 
 
     def selectHtmlDirectory(self):
-        file = str(QtGui.QFileDialog.getExistingDirectory(self, "Select Directory"))
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.html_location_chosen = 1
         return file
 
@@ -149,7 +152,7 @@ class MainWindow(QtGui.QMainWindow):
 
     def save_good_entry(self, entry):
         if self.savepath is None:
-            self.savepath = QtGui.QFileDialog.getOpenFileName(
+            self.savepath = QFileDialog.getOpenFileName(
                     self, 'Save File', '', 'CSV(*.csv)')
         else:
             self.savepath = self.savepath
@@ -181,10 +184,10 @@ class MainWindow(QtGui.QMainWindow):
 
 
 
-class EntryForm(QtGui.QWidget):
+class EntryForm(QWidget):
     def __init__(self, parent = None):
         super(EntryForm, self).__init__()
-        self.main_layout = QtGui.QGridLayout()
+        self.main_layout = QGridLayout()
         self.main_layout.setSpacing(10)
         self.parent = parent
         self.set_filled_vals()
@@ -229,36 +232,36 @@ class EntryForm(QtGui.QWidget):
     def filled_fields(self):
         if self.parent.CSV_Loaded == 0:
 
-            self.CL_ID = QtGui.QLabel("CL_ID")
-            self.CL_fill = QtGui.QLineEdit("")
+            self.CL_ID = QLabel("CL_ID")
+            self.CL_fill = QLineEdit("")
             self.CL_fill.setReadOnly(True)
-            self.Month = QtGui.QLabel("Month")
-            self.Month_Fill = QtGui.QLineEdit("")
+            self.Month = QLabel("Month")
+            self.Month_Fill = QLineEdit("")
             self.Month_Fill.setReadOnly(True)
-            self.Day = QtGui.QLabel("Day")
-            self.Day_Fill = QtGui.QLineEdit("")
+            self.Day = QLabel("Day")
+            self.Day_Fill = QLineEdit("")
             self.Day_Fill.setReadOnly(True)
-            self.State = QtGui.QLabel("State")
-            self.State_Fill = QtGui.QLineEdit("")
+            self.State = QLabel("State")
+            self.State_Fill = QLineEdit("")
             self.State_Fill.setReadOnly(True)
-            self.RA = QtGui.QLabel("RA")
-            self.RA_fill = QtGui.QLineEdit("")
+            self.RA = QLabel("RA")
+            self.RA_fill = QLineEdit("")
             self.RA_fill.setReadOnly(True)
         if self.parent.CSV_Loaded == 1:
-            self.CL_ID = QtGui.QLabel("CL_ID")
-            self.CL_fill = QtGui.QLineEdit(self.CL_IDVal)
+            self.CL_ID = QLabel("CL_ID")
+            self.CL_fill = QLineEdit(self.CL_IDVal)
             self.CL_fill.setReadOnly(True)
-            self.Month = QtGui.QLabel("Month")
-            self.Month_Fill = QtGui.QLineEdit(self.MonthVal)
+            self.Month = QLabel("Month")
+            self.Month_Fill = QLineEdit(self.MonthVal)
             self.Month_Fill.setReadOnly(True)
-            self.Day = QtGui.QLabel("Day")
-            self.Day_Fill = QtGui.QLineEdit(self.DayVal)
+            self.Day = QLabel("Day")
+            self.Day_Fill = QLineEdit(self.DayVal)
             self.Day_Fill.setReadOnly(True)
-            self.State = QtGui.QLabel("State")
-            self.State_Fill = QtGui.QLineEdit(self.StateVal)
+            self.State = QLabel("State")
+            self.State_Fill = QLineEdit(self.StateVal)
             self.State_Fill.setReadOnly(True)
-            self.RA = QtGui.QLabel("RA")
-            self.RA_fill = QtGui.QLineEdit(self.RAVal)
+            self.RA = QLabel("RA")
+            self.RA_fill = QLineEdit(self.RAVal)
             self.RA_fill.setReadOnly(True)
             self.update_filled_form()
 
@@ -302,11 +305,11 @@ class EntryForm(QtGui.QWidget):
         return filled_in
 
     def clear_unfilled_form(self):
-        self.Occupation_Entry = QtGui.QLineEdit()
-        self.ToAddress_Entry = QtGui.QLineEdit()
-        self.Company_Entry = QtGui.QLineEdit()
-        self.CompanyDesc_Entry = QtGui.QLineEdit()
-        self.EmailSubject_Entry = QtGui.QLineEdit()
+        self.Occupation_Entry = QLineEdit()
+        self.ToAddress_Entry = QLineEdit()
+        self.Company_Entry = QLineEdit()
+        self.CompanyDesc_Entry = QLineEdit()
+        self.EmailSubject_Entry = QLineEdit()
         self.unfilled_layout.addWidget(self.Occupation_Entry, 2, 1)
         self.unfilled_layout.addWidget(self.ToAddress_Entry, 3, 1)
         self.unfilled_layout.addWidget(self.Company_Entry, 4, 1)
@@ -320,7 +323,7 @@ class EntryForm(QtGui.QWidget):
 
 
     def filled_form(self):
-        filled_layout = QtGui.QGridLayout()
+        filled_layout = QGridLayout()
         filled_layout.setSpacing(10)
 
         filled_layout.addWidget(self.CL_ID, 1, 0)
@@ -338,19 +341,19 @@ class EntryForm(QtGui.QWidget):
 
 
     def unfilled_form(self):
-        self.unfilled_layout = QtGui.QGridLayout()
+        self.unfilled_layout = QGridLayout()
         self.unfilled_layout.setSpacing(10)
 
-        self.Occupation = QtGui.QLabel("Occupation")
-        self.Occupation_Entry = QtGui.QLineEdit()
-        self.ToAddress = QtGui.QLabel("ToAddress")
-        self.ToAddress_Entry = QtGui.QLineEdit()
-        self.Company = QtGui.QLabel("Company")
-        self.Company_Entry = QtGui.QLineEdit()
-        self.CompanyDesc = QtGui.QLabel("Company Description")
-        self.CompanyDesc_Entry = QtGui.QLineEdit()
-        self.EmailSubject = QtGui.QLabel("EmailSubject")
-        self.EmailSubject_Entry = QtGui.QLineEdit()
+        self.Occupation = QLabel("Occupation")
+        self.Occupation_Entry = QLineEdit()
+        self.ToAddress = QLabel("ToAddress")
+        self.ToAddress_Entry = QLineEdit()
+        self.Company = QLabel("Company")
+        self.Company_Entry = QLineEdit()
+        self.CompanyDesc = QLabel("Company Description")
+        self.CompanyDesc_Entry = QLineEdit()
+        self.EmailSubject = QLabel("EmailSubject")
+        self.EmailSubject_Entry = QLineEdit()
 
         self.unfilled_layout.addWidget(self.Occupation, 2, 0)
         self.unfilled_layout.addWidget(self.Occupation_Entry, 2, 1)
@@ -366,12 +369,12 @@ class EntryForm(QtGui.QWidget):
         return self.unfilled_layout
 
     def boolean_form(self):
-        self.checkbox_layout = QtGui.QGridLayout()
+        self.checkbox_layout = QGridLayout()
         self.checkbox_layout.setSpacing(10)
-        self.Approved = QtGui.QLabel("Job Criteria Met")
-        self.Approved_Answer = QtGui.QCheckBox()
-        self.WordResume = QtGui.QLabel("WordResume")
-        self.WordResume_Answer = QtGui.QCheckBox()
+        self.Approved = QLabel("Job Criteria Met")
+        self.Approved_Answer = QCheckBox()
+        self.WordResume = QLabel("WordResume")
+        self.WordResume_Answer = QCheckBox()
 
         self.checkbox_layout.addWidget(self.Approved, 1, 0)
         self.checkbox_layout.addWidget(self.Approved_Answer, 1, 1)
@@ -380,17 +383,17 @@ class EntryForm(QtGui.QWidget):
 
         return self.checkbox_layout
     def url_dropdown(self):
-        url_layout = QtGui.QGridLayout()
-        URL = QtGui.QLabel("URLs")
-        self.nextAd = QtGui.QPushButton("Load Next Ad")
+        url_layout = QGridLayout()
+        URL = QLabel("URLs")
+        self.nextAd = QPushButton("Load Next Ad")
         self.nextAd.clicked.connect(self.load_next_url)
-        self.choosebutton = QtGui.QPushButton("Load Chosen Ad")
+        self.choosebutton = QPushButton("Load Chosen Ad")
         self.choosebutton.clicked.connect(self.load_chosen_url)
-        self.SaveEntry = QtGui.QPushButton("Save Current Entry")
+        self.SaveEntry = QPushButton("Save Current Entry")
         self.SaveEntry.clicked.connect(self.parent.get_entries)
 
         if self.parent.CSV_Loaded == 0:
-            self.comboBox = QtGui.QComboBox(self)
+            self.comboBox = QComboBox(self)
             self.comboBox.addItem("")
             self.nextAd.setEnabled(False)
             self.choosebutton.setEnabled(False)
@@ -405,8 +408,8 @@ class EntryForm(QtGui.QWidget):
 
         if self.parent.CSV_Loaded == 1:
             urls = self.parent.urls
-            self.comboBox = QtGui.QComboBox(self)
-            self.URL_num = QtGui.QLineEdit(str(self.curr_url_index))
+            self.comboBox = QComboBox(self)
+            self.URL_num = QLineEdit(str(self.curr_url_index))
             self.URL_num.setFixedWidth(50)
             for i in urls:
                 self.comboBox.addItem(i)
@@ -425,7 +428,7 @@ class EntryForm(QtGui.QWidget):
         return url_layout
 
     def update_url_num(self):
-        self.URL_num = QtGui.QLineEdit(str(self.curr_url_index))
+        self.URL_num = QLineEdit(str(self.curr_url_index))
         self.URL_num.setFixedWidth(50)
         self.url_menu.addWidget(self.URL_num, 2, 0)
         self.setLayout(self.main_layout)
@@ -467,25 +470,25 @@ class EntryForm(QtGui.QWidget):
 
 
 
-class UrlInput(QtGui.QLineEdit):
+class UrlInput(QLineEdit):
     def __init__(self, browser):
         super(UrlInput, self).__init__()
         self.browser = browser
         self.returnPressed.connect(self._return_pressed)
 
     def _return_pressed(self):
-        url = QtCore.QUrl(self.text())
+        url = QUrl(self.text())
         self.browser.load(url)
 
     def url_chosen(self, url):
-        url = QtCore.QUrl(url)
+        url = QUrl(url)
         self.browser.load(url)
 
 
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     Window = MainWindow()
     sys.exit(app.exec_())
 
