@@ -1,5 +1,5 @@
 import sys
-from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4 import QtCore, QtGui, QtWebKit, QtNetwork
 import csv
 import codecs
 import os
@@ -24,7 +24,7 @@ class MainWindow(QtGui.QMainWindow):
         self.browser = QtWebKit.QWebView()
 
 
-        self.url_input = UrlInput(self.browser) #Initialize url input
+        self.url_input = UrlInput(self.browser, self) #Initialize url input
 
         self.layout = QtGui.QVBoxLayout(_widget) #Initialuze Vertical Layout
 
@@ -33,7 +33,7 @@ class MainWindow(QtGui.QMainWindow):
         self.layout.addWidget(self.browser) #Add Browser Widget
 
         self.layout.addWidget(self.entry) #Add Entry form Widget
-
+        self.onMain = 1
         self.savepath = None
         self.setCentralWidget(_widget)
         self.html_location_chosen = 0
@@ -124,6 +124,8 @@ class MainWindow(QtGui.QMainWindow):
         return vals
     def load_url(self, url):
         self.url_input.url_chosen(url)
+        self.url_input.goingToReply = 0
+        self.browser.loadFinished.connect(self.get_HTML)
 
     def get_entries(self):
         values = self.entry.get_filled_in_values()
@@ -145,6 +147,28 @@ class MainWindow(QtGui.QMainWindow):
             entry.append(values['RA'])
             self.save_good_entry(entry)
 
+    # def wait_for_captcha(self):
+    #     self.browser.urlChanged.connect(self.pull_ToAddress)
+    def load_toAddress(self):
+        self.onMain = 0
+        self.url_input.get_save_name()
+        find_reply = self.browser.page().currentFrame().documentElement()
+        reply_button_search = find_reply.findFirst('#replylink')
+        reply_button_search.evaluateJavaScript('this.click()')
+        self.browser.page().mainFrame().evaluateJavaScript('https://www.google.com/recaptcha/api.js?onload=gRecaptchaCallback&render=explicit')
+        #self.browser.urlChanged.connect(self.wait_for_captcha)
+    # def pull_ToAddress(self):
+    #     element = self.browser.page().currentFrame().documentElement()
+    #     Element_Search = element.findFirst("p[class=anonemail]")
+    #     titlewcss = "%s" %Element_Search.toPlainText()
+    #     #address = re.search('>(.*)<',titlewcss)
+    #     self.fill_ToAddress(address)
+
+    # def fill_ToAddress(self, value):
+    #     self.entry.ToAddress_Fill(value)
+
+    def get_HTML(self):
+        self.page = self.browser.page().currentFrame().toHtml()
 
 
     def save_good_entry(self, entry):
@@ -160,19 +184,21 @@ class MainWindow(QtGui.QMainWindow):
             writer = csv.writer(f)
             writer.writerow(entry)
         if self.html_location_chosen == 0:
-            html_dir= self.selectHtmlDirectory()
+            self.html_dir= self.selectHtmlDirectory()
         if self.html_location_chosen == 1:
             pass
 
-
-        element = self.browser.page().currentFrame().documentElement()
-        Element_Search = element.findFirst('#titletextonly')
-        titlewcss = "%s" %Element_Search.toOuterXml()
-        title_only = re.search('>(.*)<',titlewcss)
-        save_name = title_only.group(1)
-        page = self.browser.page().currentFrame().toHtml()
-        with codecs.open(os.path.join(html_dir, save_name+'.html'),mode='w') as f:
-            f.write(page)
+        if self.onMain == 1:
+            element = self.browser.page().currentFrame().documentElement()
+            Element_Search = element.findFirst('#titletextonly')
+            titlewcss = "%s" %Element_Search.toOuterXml()
+            title_only = re.search('>(.*)<',titlewcss)
+            save_name = title_only.group(1)
+            with codecs.open(os.path.join(html_dir, save_name+'.html'),mode='w') as f:
+                f.write(self.page)
+        if self.onMain == 0:
+            with codecs.open(os.path.join(self.html_dir, self.url_input.save_name+'.html'),mode='w') as f:
+                f.write(self.page)
 
 
 
@@ -262,6 +288,10 @@ class EntryForm(QtGui.QWidget):
             self.RA_fill.setReadOnly(True)
             self.update_filled_form()
 
+    def ToAddress_Fill(self, value):
+        self.ToAddressFill = QtGui.QLineEdit(value)
+        self.unfilled_layout.addWidget(self.ToAddressFill, 3, 1)
+        self.setLayout(self.main_layout)
 
     def update_filled_form(self):
         self.filled.addWidget(self.CL_fill, 1, 1)
@@ -351,11 +381,13 @@ class EntryForm(QtGui.QWidget):
         self.CompanyDesc_Entry = QtGui.QLineEdit()
         self.EmailSubject = QtGui.QLabel("EmailSubject")
         self.EmailSubject_Entry = QtGui.QLineEdit()
-
+        self.get_ToAddress = QtGui.QPushButton("Get ToAddress")
+        self.get_ToAddress.clicked.connect(self.parent.load_toAddress)
         self.unfilled_layout.addWidget(self.Occupation, 2, 0)
         self.unfilled_layout.addWidget(self.Occupation_Entry, 2, 1)
         self.unfilled_layout.addWidget(self.ToAddress, 3, 0)
         self.unfilled_layout.addWidget(self.ToAddress_Entry, 3, 1)
+        self.unfilled_layout.addWidget(self.get_ToAddress, 3, 2)
         self.unfilled_layout.addWidget(self.Company, 4, 0)
         self.unfilled_layout.addWidget(self.Company_Entry, 4, 1)
         self.unfilled_layout.addWidget(self.CompanyDesc, 5, 0)
@@ -431,7 +463,6 @@ class EntryForm(QtGui.QWidget):
         self.setLayout(self.main_layout)
 
 
-
     def load_chosen_url(self):
         self.parent.start = 0
         url = self.comboBox.currentText()
@@ -441,6 +472,7 @@ class EntryForm(QtGui.QWidget):
         self.curr_url_index = url_index
         self.clear_unfilled_form()
         self.update_url_num()
+        self.parent.onMain = 1
 
 
     def load_next_url(self):
@@ -455,6 +487,7 @@ class EntryForm(QtGui.QWidget):
         self.clear_unfilled_form()
         self.set_filled_vals(url_index2)
         self.parent.load_url(url2)
+        self.parent.onMain = 1
 
 
 
@@ -468,18 +501,38 @@ class EntryForm(QtGui.QWidget):
 
 
 class UrlInput(QtGui.QLineEdit):
-    def __init__(self, browser):
+    def __init__(self, browser, parent = None):
         super(UrlInput, self).__init__()
         self.browser = browser
         self.returnPressed.connect(self._return_pressed)
+        self.goingToReply = 0
+
 
     def _return_pressed(self):
         url = QtCore.QUrl(self.text())
         self.browser.load(url)
+    def customuseragent(self, url):
+        print 'called for %s' % url
+        return 'custom ua'
 
     def url_chosen(self, url):
-        url = QtCore.QUrl(url)
-        self.browser.load(url)
+        self.goingToReply = 0
+        USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1"
+        self.request = QtNetwork.QNetworkRequest()
+        self.request.setUrl(QtCore.QUrl(url))
+        self.request.setRawHeader("User-Agent",USER_AGENT)
+        self.browser.page().userAgentForURL = self.customuseragent
+        self.browser.load(self.request)
+
+    def get_save_name(self):
+        element = self.browser.page().currentFrame().documentElement()
+        Element_Search = element.findFirst('#titletextonly')
+        titlewcss = "%s" %Element_Search.toOuterXml()
+        title_only = re.search('>(.*)<',titlewcss)
+        self.save_name = title_only.group(1)
+
+
+
 
 
 
